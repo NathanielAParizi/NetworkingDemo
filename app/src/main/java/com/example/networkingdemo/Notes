@@ -1,0 +1,68 @@
+- Networking and Android
+
+    - Network calls from Main thread are NOT ALLOWED
+    - ALL INTERNET APPS MUST USE THE INTERNET SYSTEM PERMISSION
+    - Generally, we use the network to request data from online source or to send data to an
+        online source.
+        - This act is generally referred to as "Consuming API Calls"
+    - In Android we have a few common libraries to achieve network calls.
+
+        - Java Native
+            - HttpURLConnection
+            - Then open a HttpURLConnection using the URL Object
+            - Buffer through the result from connection
+            - close connection
+            - You must define a threading scheme
+
+            
+        - REST vs SOAP
+
+            SOAP
+            Simple Object Access Protocol
+                - older
+                - only returns xmls
+                - protocol based
+                - SLOWER
+                - kSoap was the common lib used for SOAP in Android
+            REST
+            Representational State Transfer
+                - returns many formats
+                - faster
+                -
+        - Third Party Libraries
+            - Retrofit
+                - Uses a OkHttp3 client
+                - Uses interfaces with Call object returns
+                - Interfaces are annotated with the proper Http Verb that interface is for
+                - Has  built in (from okHttp3) Sync and Async capabilities.
+                - Sync function = execute
+                - Async function = enqueue
+                - Uses a converter factory to convert results to objects
+                - Uses a Call Factory adapter to interact with SOME threading schemes more
+                    seemlessly.
+                    - RxJava
+                    - Coroutines
+                - Most commonly used when third parties are allowed.
+
+
+            - OkHttp   ( Current version = 3 , OkHttp3 )
+                - Uses interfaces with Call object returns
+                - Has  built in (from okHttp3) Sync and Async capabilities.
+                - Sync function = execute
+                - Async function = enqueue
+            - Volley
+                - HttpUrlConnection Client
+            - SpringBoot (Not used a lot)
+
+
+        - JSON
+            - Must returns nowadays
+
+        - Parse respnses formatted into a JSON into bjects (PROJO or Data class)
+            - 2 Methods
+                - Java Native Way
+                    - JSON Parser
+                - Google way
+                    - GSON
+                        - Google JSON parser
+
