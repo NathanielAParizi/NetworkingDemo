@@ -66,3 +66,16 @@
                     - GSON
                         - Google JSON parser
 
+
+Image Processing
+    - 2 Major 3rd Party Libraries used for image processing
+        - Glide
+            - Caches resized images from web recourses
+            - Has more functionality built in
+            - Slower on initial load but faster from cache
+            - Heavy weight library (uses alot of memory and methods)
+        - Picasso
+            - Caches the RAW image
+            - Less functionality
+            - faster on initial load of image but slower on cached
+            - Light weight library

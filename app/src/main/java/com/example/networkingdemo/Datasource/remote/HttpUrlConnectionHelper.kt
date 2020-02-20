@@ -1,13 +1,11 @@
-package com.example.networkingdemo
+package com.example.networkingdemo.Datasource.remote
 
 import android.net.Uri
 import java.net.HttpURLConnection
 import java.net.URL
 
 class HttpUrlConnectionHelper{
-
-    fun getResponse(url : String) : String?{
-
+    fun getResponse(url : String) : String {
 
         var returnString = ""
         val url = URL(url)
@@ -16,13 +14,16 @@ class HttpUrlConnectionHelper{
         val stream = connection.inputStream
         var read = stream.read()
 
-        while(read > 0){
-            returnString = "$returnString ${read.toChar()}"
+        while (read > 0){
+            returnString = "$returnString${read.toChar()}"
             read = stream.read()
+
         }
+
         stream.close()
         return returnString
 
     }
+
 
 }
