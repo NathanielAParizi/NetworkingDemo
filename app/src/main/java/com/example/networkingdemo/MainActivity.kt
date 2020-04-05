@@ -7,7 +7,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.networkingdemo.Datasource.remote.*
+import com.example.networkingdemo.Datasource.remote.Retrofit.RetrofitHelper
 import com.example.networkingdemo.Model.ChuckNorrisRepsonse.ChuckNorrisResponse
+import com.example.networkingdemo.Model.JokeResponse
 import com.example.networkingdemo.Model.User.userResponse
 import com.example.networkingdemo.View.Adapter.UserAdapter
 import com.google.gson.Gson
@@ -18,40 +20,39 @@ import org.greenrobot.eventbus.ThreadMode
 
 class MainActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
     fun onClick(view: View) {
-
-        when (view.id) {
-
-            R.id.button -> executeHttpUrlConnCall()
-            R.id.button2 -> executeAsyncOkHttpCall()
-            R.id.button3 -> executeSyncOkHttpCall()
+        when(view.id) {
+            R.id.btnExecuteHttpUrlConnCall -> executeHttpUrlConnCall()
+            R.id.btnExecuteAsyncOkHttp -> executeAsyncOkHttpCall()
+            R.id.btnExecuteSyncOkHttp -> executeSyncOkHttpCall()
+            R.id.btnExecuteAsyncRetrofit -> executeAsyncRetrofitCall()
         }
-
     }
 
-    private fun executeAsyncOkHttpCall() {
-
+    fun executeAsyncOkHttpCall() {
         val okHttpHelper = OkHttpHelper(cacheDir)
         try {
             okHttpHelper.makeAsyncApiCall(randomUserFullURL)
-        } catch (e: Exception) {
+        } catch(e : Exception) {
             okHttpHelper.makeAsyncApiCall(chuckNorrisJokesURL)
         }
     }
 
     fun executeSyncOkHttpCall() {
-        val okHttpAsyncTask = OkHttpAsyncTask(cacheDir)
-        okHttpAsyncTask.execute()
+        val okHttpAsyncTsk = OkHttpAsyncTask(cacheDir)
+        okHttpAsyncTsk.execute()
     }
 
+    fun executeAsyncRetrofitCall() {
+        val retrofitHelper = RetrofitHelper()
+        retrofitHelper.startChuckNorrisRequest(cacheDir)
+    }
 
-    //EventBus
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -62,52 +63,39 @@ class MainActivity : AppCompatActivity() {
         EventBus.getDefault().unregister(this)
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUserResponse(userResponse: userResponse) {
-        rvList.layoutManager = LinearLayoutManager(this)
-        rvList.adapter = UserAdapter(userResponse.results)
+        rvUserList.layoutManager = LinearLayoutManager(this)
+        rvUserList.adapter = UserAdapter(userResponse.results)
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onJokeResponse(chuckNorrisResponse: ChuckNorrisResponse) {
-
-        Toast.makeText(this, chuckNorrisResponse.value.joke, Toast.LENGTH_LONG).show()
+    fun onJokeResponse(jokeResponse: JokeResponse) {
+        Log.d("TAG", jokeResponse.value.joke)
+        Toast.makeText(this, jokeResponse.value.joke, Toast.LENGTH_LONG).show()
     }
 
     fun executeHttpUrlConnCall() {
-
         val randomUserURL = "https://randomuser.me/api/?results=10"
-        val httpURLConnectionHelper = HttpUrlConnectionHelper()
+        val httpUrlConnectionHelper = HttpUrlConnectionHelper()
         var jsonString = ""
         Thread(
             Runnable
             {
-                jsonString = httpURLConnectionHelper.getResponse(randomUserURL)
+                jsonString = httpUrlConnectionHelper.getResponse(randomUserURL)
                 Log.d("TAG", jsonString)
 
-                if (jsonString.isNotBlank()) {
-                    val responseFromUser =
-                        Gson().fromJson<userResponse>(jsonString, userResponse::class.java)
-                    Log.d(
-                        "TAG",
-                        "FIRST RESPONSES FIRST NAME = ${responseFromUser.results[0].name.first}"
-                    )
-
-
+                if(jsonString.isNotBlank()) {
+                    val userResponse = Gson().fromJson<userResponse>(jsonString, userResponse::class.java)
+                    Log.d("TAG", "FIRST RESPONSES FIRST NAME = ${userResponse.results[0].name.first}")
                     runOnUiThread {
-
-                        rvList.layoutManager = LinearLayoutManager(this)
-                        rvList.adapter = UserAdapter(responseFromUser.results)
-
+                        rvUserList.layoutManager = LinearLayoutManager(this)
+                        rvUserList.adapter = UserAdapter(userResponse.results)
                     }
-
-
                 }
             }
-
         ).start()
+
 
 
     }
