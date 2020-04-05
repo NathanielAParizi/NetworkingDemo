@@ -50,8 +50,10 @@
                 - Has  built in (from okHttp3) Sync and Async capabilities.
                 - Sync function = execute
                 - Async function = enqueue
+
             - Volley
                 - HttpUrlConnection Client
+                
             - SpringBoot (Not used a lot)
 
 
@@ -79,3 +81,43 @@ Image Processing
             - Less functionality
             - faster on initial load of image but slower on cached
             - Light weight library
+
+
+
+ *********************
+
+ RxJava / RxAndroid
+
+
+  - Reactive Programming schema for Java and Android apps.
+  - RxJava uses the Observer / Subscriber pattern
+  - 4 Main parts
+        - Observables
+            - These are the tasks you want to observe for changes in state
+        - Observers
+            - These are the parties looking for observable changes
+        - Schedulers
+            - These are the "threads" that will either perform the tasks or the thread that will
+                be used to report the task to.
+        - Emitters
+            - Pipeline that the results or information about state is transmitted on
+
+        - Types of Observables
+            - Standard
+                - 1 to n emissions   (NO BACK-PRESSURE CONTROL)
+            - Flowable
+                - 1 to n emissions WITH BACK_PRESSURE CONTROL
+            - Single
+                - 1 emission
+            - Completable
+                - Only tell if the operation being done is completed (Boolean t/f)
+            - Maybe
+                -   0 - 1 Emission
+
+        - Schedulers
+            - Dictates which thread will do either the observation or is going to be observed
+                - Schedulers.io()       <--- RxJava        (Worker thread)
+                - Schedulers.mainThread() <-- RxAndroid    (Main thread)
+
+
+                Gson Converter Factory
